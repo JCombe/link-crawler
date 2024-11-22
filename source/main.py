@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import re
 
 url = "https://www.google.de"
 #url = input("What url would you like to crawl for links? ")
@@ -10,6 +11,7 @@ if not url:
 keyword = input("Name the key word within the link you are searching for (leave blank to list all links): ").strip()
 
 all_links = []
+all_absolute_paths = []
 
 
 try:
@@ -31,9 +33,29 @@ for a_tag in a_tags:
     if not keyword or keyword.lower() in href.lower():
         all_links.append(href)
 
-# Output results
+# Check if absolute path if not then make it an absolute path and append it to is_absolute_link array
+def is_absolute_link(rel_path: str):
+    pattern = re.compile(r'(https?)://')    # r: raw string literal; (): create a group e.g. (https?|ftp);
+                                            # ^: caret, matches the beginning of a string
+                                            # ?: the preceding character is optional
+    if not pattern.match(rel_path):
+        absolute_path = url+href
+        all_absolute_paths.append(absolute_path)
+
+    else:
+        all_absolute_paths.append(rel_path)
+
+# Calling is_absolute_link()
 if all_links:
     for link in all_links:
-        print(link)
+        is_absolute_link(link)
+
+# Recursively search for links
+
+
+# Output results
+if all_absolute_paths:
+    for path in all_absolute_paths:
+        print(path)
 else:
     print(f'The keyword "{keyword}" was not found.')
