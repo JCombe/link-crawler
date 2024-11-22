@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-from requests.structures import CaseInsensitiveDict
-
 url = "https://www.google.de"
 #url = input("What url would you like to crawl for links? ")
 if not url:
